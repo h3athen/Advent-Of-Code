@@ -5,7 +5,7 @@
 
 using namespace std;
 
-bool check(vector<int>& vals) {
+bool check_one(vector<int>& vals) {
     bool inc = true, dec = true;
 
     for (int i = 1; i < vals.size(); ++i) {
@@ -23,9 +23,28 @@ bool check(vector<int>& vals) {
     return inc || dec;
 }
 
+bool check_two(vector<int>& vals) {
+    if (check_one(vals)) {
+        return true;
+    }
+
+    for ( int i = 0; i < vals.size(); ++i) {
+        vector<int> new_vals;
+        for (int j = 0; j < vals.size(); ++j) {
+            if (j != i) {
+                new_vals.push_back(vals[j]);
+            }
+        }
+        if (check_one(new_vals)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 int main(void) {
 	ifstream file("input.txt");
-    int safe=0;
+    int part_one=0, part_two=0;
     string line;
 	while (std::getline(file, line)) {
         stringstream ss(line);
@@ -36,11 +55,16 @@ int main(void) {
             vals.push_back(val);
         }
 
-        if (check(vals)) {
-            safe++;
+        if (check_one(vals)) {
+            part_one++;
+        }
+
+        if (check_two(vals)) {
+            part_two++;
         }
     }
 	file.close();
 
-    cout << "Part 1: " << safe << endl;
+    cout << "Part 1: " << part_one << endl;
+    cout << "Part 2: " << part_two << endl;
 }
